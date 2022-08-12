@@ -13,20 +13,22 @@ import {
   responsiveWidth as wp,
   responsiveHeight as hp,
 } from 'react-native-responsive-dimensions';
-
+import {fetchImages} from '../redux/reducers/ImageGallery/ImageList.actions';
+import {useDispatch, useSelector} from 'react-redux';
 const ImageList = ({navigation}) => {
-  const [imageListData, setImageListData] = useState([]);
+  const dispatch = useDispatch();
+  const imageListData = useSelector(
+    state => state?.imageGallery?.imageList || [],
+  );
   const [fetched, setFetched] = useState(false);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/photos')
-      .then(response => response.json())
-      .then(data => {
-        setFetched(true);
-        setImageListData(data);
-      })
-      .catch(err => console.log('@@@@err', err));
+    dispatch(fetchImages())
+      .then(data => console.log('data', data))
+      .catch(err => console.log('err', err))
+      .finally(() => setFetched(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const RenderItem = ({item}) => {
