@@ -15,6 +15,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import {fetchImages} from '../redux/reducers/ImageGallery/ImageList.actions';
 import {useDispatch, useSelector} from 'react-redux';
+import {BiometricAuthentication} from '../utils/authentication';
 const ImageList = ({navigation}) => {
   const dispatch = useDispatch();
   const imageListData = useSelector(
@@ -24,6 +25,7 @@ const ImageList = ({navigation}) => {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
+    BiometricAuthentication();
     dispatch(fetchImages())
       .then(data => console.log('data', data))
       .catch(err => console.log('err', err))
