@@ -1,4 +1,4 @@
-package com.imagegallery;
+package com.imagegallery.slides;
 
 import com.facebook.react.ReactActivity;
 
