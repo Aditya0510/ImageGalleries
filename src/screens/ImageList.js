@@ -40,7 +40,7 @@ const ImageList = ({navigation}) => {
       .then(data => console.log('data', data))
       .catch(err => console.log('err', err))
       .finally(() => setFetched(true));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, []);
 
   const RenderItem = ({item}) => {
