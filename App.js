@@ -11,7 +11,8 @@ import type {Node} from 'react';
 import {SafeAreaView} from 'react-native';
 import Routes from './src/routes';
 import {Provider} from 'react-redux';
-import {store} from './src/redux';
+import {persistor, store} from './src/redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const App: () => Node = () => {
   const backgroundStyle = {
@@ -22,7 +23,9 @@ const App: () => Node = () => {
   return (
     <SafeAreaView style={backgroundStyle}>
       <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
         <Routes />
+        </PersistGate>
       </Provider>
     </SafeAreaView>
   );

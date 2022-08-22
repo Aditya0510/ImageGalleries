@@ -6,8 +6,10 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  AppState,
+  BackHandler,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Loader from '../components/ListLoader';
 import {
   responsiveWidth as wp,
@@ -28,13 +30,37 @@ const ImageList = ({navigation}) => {
   );
   const [fetched, setFetched] = useState(false);
   const [search, setSearch] = useState('');
+  const appState = useRef(AppState.currentState);
 
+// fetch state of Application
   useEffect(() => {
-    BiometricAuthentication()
-      .then(data => {
+    const subscription = AppState.addEventListener("change", nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+      BiometricAuthentication()
+      .then(() => {
         getCurrentLocation(setCurrentLocation, setLocationError);
       })
-      .catch(err => console.log('Error', err));
+      .catch(err => BackHandler.exitApp());
+    }
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+
+// Ask for biometric 
+  useEffect(() => {
+    BiometricAuthentication()
+      .then(() => {
+        getCurrentLocation(setCurrentLocation, setLocationError);
+      })
+      .catch(err =>  BackHandler.exitApp());
 
     dispatch(fetchImages())
       .then(data => console.log('data', data))
@@ -43,7 +69,11 @@ const ImageList = ({navigation}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, []);
 
+ 
+
+
   const RenderItem = ({item}) => {
+    console.log("@@@@item",item)
     return (
       <TouchableOpacity
         onPress={() => navigation.navigate('ImageView', {item})}
@@ -134,6 +164,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
+    color:'#000',
     marginLeft: wp(2),
     flex: 1,
   },

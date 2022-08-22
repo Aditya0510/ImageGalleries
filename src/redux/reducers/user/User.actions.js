@@ -3,11 +3,11 @@ import userSlice from './User.reducer';
 
 const {login} = userSlice.actions;
 
-export const loginApi = () => dispatch => {
-  dispatch(login('Logged in'));
+export const loginApi = (userData) => dispatch => {
+  dispatch(login({token:userData?.idToken,user:userData?.user}));
 };
 export const googleSignInApi = () => dispatch => {
   return GoogleLogin()
-    .then(data => console.log('Data', data))
+    .then(data => dispatch(loginApi(data)))
     .catch(err => console.log('caught err', err));
 };
