@@ -9,11 +9,16 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
+  
   reducers: {
     login: (state, action) => {
       state.token = action.payload.token;
       state.user = action.payload.user
     },
+    logOut: (state) =>{
+      state.token= '',
+      state.user={}
+    }
   },
 });
 export default userSlice;

@@ -21,6 +21,8 @@ import {
   BiometricAuthentication,
   getCurrentLocation,
 } from '../utils/authentication';
+import { logOutApi } from '../redux/reducers/user/User.actions';
+// import { useCheckAppState } from '../utils/customHooks';
 const ImageList = ({navigation}) => {
   const [currentLocation, setCurrentLocation] = useState({});
   const [locationError, setLocationError] = useState(null);
@@ -31,7 +33,7 @@ const ImageList = ({navigation}) => {
   const [fetched, setFetched] = useState(false);
   const [search, setSearch] = useState('');
   const appState = useRef(AppState.currentState);
-
+  
 // fetch state of Application
   useEffect(() => {
     const subscription = AppState.addEventListener("change", nextAppState => {
@@ -73,7 +75,6 @@ const ImageList = ({navigation}) => {
 
 
   const RenderItem = ({item}) => {
-    console.log("@@@@item",item)
     return (
       <TouchableOpacity
         onPress={() => navigation.navigate('ImageView', {item})}
@@ -120,6 +121,7 @@ const ImageList = ({navigation}) => {
         </View>
       ) : (
         <>
+          <Text style={{color:'#000',marginLeft:'auto'}} onPress={()=>dispatch(logOutApi())}>Logout</Text>
           <TextInput
             placeholder="Search"
             value={search}
