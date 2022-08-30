@@ -17,12 +17,8 @@ import {
 } from 'react-native-responsive-dimensions';
 import {fetchImages} from '../redux/reducers/ImageGallery/ImageList.actions';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  BiometricAuthentication,
-  getCurrentLocation,
-} from '../utils/authentication';
-import { logOutApi } from '../redux/reducers/user/User.actions';
-// import { useCheckAppState } from '../utils/customHooks';
+import {getCurrentLocation} from '../utils/authentication';
+import {logOutApi} from '../redux/reducers/user/User.actions';
 const ImageList = ({navigation}) => {
   const [currentLocation, setCurrentLocation] = useState({});
   const [locationError, setLocationError] = useState(null);
@@ -32,47 +28,15 @@ const ImageList = ({navigation}) => {
   );
   const [fetched, setFetched] = useState(false);
   const [search, setSearch] = useState('');
-  const appState = useRef(AppState.currentState);
-  
-// fetch state of Application
+
   useEffect(() => {
-    const subscription = AppState.addEventListener("change", nextAppState => {
-      if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState === "active"
-      ) {
-      BiometricAuthentication()
-      .then(() => {
-        getCurrentLocation(setCurrentLocation, setLocationError);
-      })
-      .catch(err => BackHandler.exitApp());
-    }
-      appState.current = nextAppState;
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-
-// Ask for biometric 
-  useEffect(() => {
-    BiometricAuthentication()
-      .then(() => {
-        getCurrentLocation(setCurrentLocation, setLocationError);
-      })
-      .catch(err =>  BackHandler.exitApp());
-
+    getCurrentLocation(setCurrentLocation, setLocationError);
     dispatch(fetchImages())
       .then(data => console.log('data', data))
       .catch(err => console.log('err', err))
       .finally(() => setFetched(true));
-    // eslint-disable-next-line react-hooks/exhaustive-deps 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
- 
-
 
   const RenderItem = ({item}) => {
     return (
@@ -121,7 +85,11 @@ const ImageList = ({navigation}) => {
         </View>
       ) : (
         <>
-          <Text style={{color:'#000',marginLeft:'auto'}} onPress={()=>dispatch(logOutApi())}>Logout</Text>
+          <Text
+            style={{color: '#000', marginLeft: 'auto'}}
+            onPress={() => dispatch(logOutApi())}>
+            Logout
+          </Text>
           <TextInput
             placeholder="Search"
             value={search}
@@ -166,7 +134,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color:'#000',
+    color: '#000',
     marginLeft: wp(2),
     flex: 1,
   },
